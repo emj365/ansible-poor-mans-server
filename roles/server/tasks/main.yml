@@ -1,0 +1,4 @@
+- include: system.yml tags=system
+- include: dependencies.yml tags=dependencies
+- include: nginx.yml tags=nginx
+- include: opencc.yml tags=opencc

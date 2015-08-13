@@ -1,0 +1,31 @@
+- name: check opencc stat
+  stat: path=/usr/bin/opencc
+  register: opencc_stat
+
+- name: install opencc dependencies
+  action: apt pkg={{item}} state=installed
+  with_items:
+    - cmake
+    - doxygen
+  when: opencc_stat.stat.exists == false and install_opencc
+
+- name: download sources
+  get_url:
+    url="https://bintray.com/artifact/download/byvoid/opencc/opencc-1.0.3.tar.gz"
+    dest='~/'
+  when: opencc_stat.stat.exists == false and install_opencc
+
+- name: Unarchive source
+  unarchive:
+    src="~/opencc-1.0.3.tar.gz"
+    dest="~/"
+    copy=no
+  when: opencc_stat.stat.exists == false and install_opencc
+
+- name: install
+  shell: "cd ~/opencc-1.0.3; make install"
+  when: opencc_stat.stat.exists == false and install_opencc
+
+- name: remove
+  shell: "rm ~/opencc-1.0.3.tar.gz; rm -rf ~/opencc-1.0.3"
+  when: opencc_stat.stat.exists == false and install_opencc

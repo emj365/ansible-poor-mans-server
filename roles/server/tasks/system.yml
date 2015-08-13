@@ -1,0 +1,13 @@
+- name: check swap stat
+  stat: path=/swapfile
+  register: sym
+
+- name: create swap file
+  script: scripts/add_swap.sh {{swap_size_mb}}
+  when: sym.stat.exists == False
+
+- name: Install unattended-upgrades
+  apt: pkg=unattended-upgrades state=latest
+
+- name: add automatic updates config
+  copy: src=roles/server/templates/20auto-upgrades dest=/etc/apt/apt.conf.d/20auto-upgrades owner=root group=root mode=0644
