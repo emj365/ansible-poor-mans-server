@@ -1,0 +1,34 @@
+- name: check rbenv installed
+  stat: path=~/.rbenv/bin/rbenv
+  register: rbenv_stat
+  ignore_errors: yes
+
+- name: install rbenv
+  script: scripts/install_rbenv.sh
+  when: rbenv_stat.stat.exists == false
+
+- name: check ruby ruby versions
+  command: ~/.rbenv/bin/rbenv versions
+  register: ruby_versions
+  ignore_errors: yes
+
+- name: install ruby
+  command: ~/.rbenv/bin/rbenv install {{ ruby_version }}
+  when: ruby_versions.stdout.find('{{ ruby_version }}') == -1
+
+- name: set default ruby
+  command: ~/.rbenv/bin/rbenv global {{ ruby_version }}
+
+- name: check .gemrc
+  stat: path=~/.gemrc
+  register: gemrc
+
+- name: create .gemrc shell
+  file: path=~/.gemrc state=touch
+  when: not gemrc.stat.exists
+
+- name: set no doc installing
+  lineinfile: "dest=~/.gemrc line='gem: --no-ri --no-rdoc'"
+
+- name: install bundler ruby
+  command: ~/.rbenv/bin/rbenv exec gem install bundler

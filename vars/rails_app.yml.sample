@@ -1,0 +1,5 @@
+# poor mans server variables
+app_name: oyan
+server_names: staging.oyan.cc
+ruby_version: 2.1.5
+security_keys: "devise_secret_key,SECRET_KEY_BASE"

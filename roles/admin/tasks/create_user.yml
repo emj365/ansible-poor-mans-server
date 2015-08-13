@@ -1,0 +1,4 @@
+- name: Create deployment user
+  user: name={{ user }} comment="Application deployment user"
+
+- authorized_key: user={{ user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

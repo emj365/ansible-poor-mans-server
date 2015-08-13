@@ -1,0 +1,7 @@
+- name: check security code stat
+  stat: path=~/{{ app_name }}/shared/config/application.yml
+  register: security_code
+
+- name: generate security code for rails
+  script: scripts/security_code.rb ~/{{ app_name }}/shared/config/application.yml {{ security_keys }}
+  when: security_code.stat.exists == false

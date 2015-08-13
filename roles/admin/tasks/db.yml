@@ -1,0 +1,9 @@
+- name: create the postgresql user for application
+  postgresql_user: name={{ user }}
+  sudo: yes
+  sudo_user: postgres
+
+- name: create the postgresql database for application
+  postgresql_db: name={{ user }}_{{app_name}} owner={{ user }} state=present
+  sudo: yes
+  sudo_user: postgres
